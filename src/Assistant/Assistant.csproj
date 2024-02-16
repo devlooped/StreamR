@@ -1,14 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Devlooped.Assistant</AssemblyName>
     <RootNamespace>Devlooped.Assistant</RootNamespace>
+    <PackageId>Devlooped.Assistant</PackageId>
+    <Description>An opinionated streaming-based library for running assistants with support for tool/function invocation and assistant behavior composition.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.13" />
     <PackageReference Include="Azure.AI.OpenAI.Assistants" Version="1.0.0-beta.2" />
+    <PackageReference Include="Microsoft.DeepDev.TokenizerLib" Version="1.3.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NuGetizer" Version="1.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
