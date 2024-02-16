@@ -9,5 +9,5 @@ public class Misc(ITestOutputHelper output)
     public void Run()
     {
         output.WriteLine("Hello World!");
-    }   
+    }
 }
