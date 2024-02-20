@@ -1,4 +1,4 @@
-![Icon](https://raw.github.com/devlooped/assistant/main/assets/img/32.png) Assistant
+![Icon](https://raw.github.com/devlooped/assistant/main/assets/img/32.png) AI StreamR
 ================
 
 [![Version](https://img.shields.io/nuget/vpre/Devlooped.Assistant.svg?color=royalblue)](https://www.nuget.org/packages/Devlooped.Assistant)
