@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Devlooped.AI.StreamR</AssemblyName>
+    <RootNamespace>Devlooped.AI</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet">
+    <PackageId>Devlooped.AI.StreamR</PackageId>
+    <Description>An opinionated streaming-based library for running assistants with support for tool/function invocation and assistant behavior composition.</Description>
+    <PackageProjectUrl>https://github.com/devlooped/StreamR</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGetizer" Version="1.2.1" PrivateAssets="all" />
+    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.13" />
+    <PackageReference Include="Microsoft.DeepDev.TokenizerLib" Version="1.3.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
