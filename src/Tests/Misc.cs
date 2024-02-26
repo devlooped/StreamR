@@ -59,7 +59,7 @@ public class Misc(ITestOutputHelper output)
     {
         var client = new Azure.AI.OpenAI.Assistants.AssistantsClient(config["OpenAI:Key"] ??
             throw new InvalidOperationException("Please provide the OpenAI API key. See readme for more information."));
-        
+
         // client.UploadFile("", OpenAIFilePurpose.)
 
         var assistant = (await client.GetAssistantsAsync()).Value
@@ -79,16 +79,16 @@ public class Misc(ITestOutputHelper output)
 
         var thread = (await client.CreateThreadAsync(new Azure.AI.OpenAI.Assistants.AssistantThreadCreationOptions
         {
-            Metadata = 
+            Metadata =
             {
                 { "foo", "bar" }
             },
-            Messages = 
+            Messages =
             {
                new Azure.AI.OpenAI.Assistants.ThreadInitializationMessage(Azure.AI.OpenAI.Assistants.MessageRole.User, "Hi there, I'm kzu!")
             },
         })).Value;
-        
+
         var msg = (await client.CreateMessageAsync(thread.Id, Azure.AI.OpenAI.Assistants.MessageRole.User, "What was funniest Friends episode?")).Value;
 
         var run = (await client.CreateRunAsync(thread.Id, new Azure.AI.OpenAI.Assistants.CreateRunOptions(assistant.Id)
