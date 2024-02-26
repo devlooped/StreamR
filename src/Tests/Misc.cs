@@ -103,7 +103,7 @@ public class Misc(ITestOutputHelper output)
         while (run.Status != Azure.AI.OpenAI.Assistants.RunStatus.Completed)
         {
             run = (await client.GetRunAsync(thread.Id, run.Id)).Value;
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
         }
 
         foreach (var message in (await client.GetMessagesAsync(thread.Id)).Value)
