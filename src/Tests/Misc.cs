@@ -16,26 +16,27 @@ public class Misc(ITestOutputHelper output)
 {
     static readonly IConfiguration config = new ConfigurationBuilder()
         .AddUserSecrets("720fb04e-8a57-480c-bfc8-a24ed9dfd68c")
+        .AddEnvironmentVariables()
         .Build();
 
-    record Entity(string Id, IDictionary<string, string> Metadata);
+    public record Entity(string Id, IDictionary<string, string> Metadata);
 
-    record Thread(string Id, IDictionary<string, string> Metadata) : Entity(Id, Metadata);
+    public record Thread(string Id, IDictionary<string, string> Metadata) : Entity(Id, Metadata);
 
-    interface IThreadManager
+    public interface IThreadManager
     {
         Task<Thread> CreateAsync();
         Task AppendAsync(Content content);
     }
 
-    record Content(string Type);
-    record UserContent(string Message) : Content("User");
-    record FileContent(string Path, string Type) : Content(Type)
+    public record Content(string Type);
+    public record UserContent(string Message) : Content("User");
+    public record FileContent(string Path, string Type) : Content(Type)
     {
         protected FileContent(string Path) : this(Path, "File") { }
     }
 
-    record ImageContent(string Path) : FileContent(Path, "Image");
+    public record ImageContent(string Path) : FileContent(Path, "Image");
 
     static class ThreadManagerExtensions
     {

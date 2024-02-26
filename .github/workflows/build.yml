@@ -21,6 +21,7 @@ env:
   VersionLabel: ${{ github.ref }}
   PackOnBuild: true
   GeneratePackageOnBuild: true
+  OpenAI__Key: ${{ secrets.OPENAI__KEY }}
   
 defaults:
   run:
