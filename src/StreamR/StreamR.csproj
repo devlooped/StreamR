@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Devlooped.AI.StreamR</AssemblyName>
     <RootNamespace>Devlooped.AI</RootNamespace>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">

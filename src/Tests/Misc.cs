@@ -1,62 +1,60 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
 using Azure.AI.OpenAI.Assistants;
+using DotNetConfig;
 using Microsoft.Extensions.Configuration;
-using Moq;
-using Newtonsoft.Json.Linq;
 
-namespace Devlooped.Assistants;
+namespace Devlooped.AI;
 
 public class Misc(ITestOutputHelper output)
 {
     static readonly IConfiguration config = new ConfigurationBuilder()
-        .AddUserSecrets("720fb04e-8a57-480c-bfc8-a24ed9dfd68c")
         .AddEnvironmentVariables()
+        .AddDotNetConfig()
+        .AddUserSecrets("720fb04e-8a57-480c-bfc8-a24ed9dfd68c")
         .Build();
 
-    public record Entity(string Id, IDictionary<string, string> Metadata);
-
-    public record Thread(string Id, IDictionary<string, string> Metadata) : Entity(Id, Metadata);
-
-    public interface IThreadManager
+    [Fact]
+    public async Task RunChatStreamAsync()
     {
-        Task<Thread> CreateAsync();
-        Task AppendAsync(Content content);
+        await foreach (var text in Ask("What was funniest Friends episode?"))
+        {
+            output.WriteLine(text);
+        }
     }
 
-    public record Content(string Type);
-    public record UserContent(string Message) : Content("User");
-    public record FileContent(string Path, string Type) : Content(Type)
+    static async IAsyncEnumerable<string> Ask(string question, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
-        protected FileContent(string Path) : this(Path, "File") { }
-    }
+        var oai = new OpenAIClient(config["OpenAI:Key"] ??
+            throw new InvalidOperationException("Please provide the OpenAI API key. See readme for more information."));
 
-    public record ImageContent(string Path) : FileContent(Path, "Image");
+        var options = new ChatCompletionsOptions
+        {
+            DeploymentName = "gpt-3.5-turbo-1106",
+            Messages =
+            {
+                new ChatRequestSystemMessage("You are funny, like Chandler from Friends."),
+                new ChatRequestSystemMessage("Respond in les than 50 words."),
+                new ChatRequestUserMessage(question)
+            }
+        };
 
-    static class ThreadManagerExtensions
-    {
-        //public async Task AppendAsync(string message) => 
+        var response = await oai.GetChatCompletionsStreamingAsync(options, cancellation);
+        await foreach (var choice in response.EnumerateValues())
+        {
+            if (choice.ContentUpdate != null)
+                yield return choice.ContentUpdate;
+        }
     }
 
     [Fact]
-    public async Task Ask()
-    {
-        var manager = Mock.Of<IThreadManager>();
-
-        var thread = await manager.CreateAsync();
-
-        //manager.Append("hello");
-
-    }
-
-
-    [Fact]
-    public async Task RunAsync()
+    public async Task RunAssistantAsync()
     {
         var client = new Azure.AI.OpenAI.Assistants.AssistantsClient(config["OpenAI:Key"] ??
             throw new InvalidOperationException("Please provide the OpenAI API key. See readme for more information."));
@@ -78,36 +76,43 @@ public class Misc(ITestOutputHelper output)
                 Tools = { },
             })).Value;
 
-        var thread = (await client.CreateThreadAsync(new Azure.AI.OpenAI.Assistants.AssistantThreadCreationOptions
+        var threadId = config["StreamR:Tests:ThreadID"];
+        if (threadId is null)
         {
-            Metadata =
+            var thread = (await client.CreateThreadAsync(new Azure.AI.OpenAI.Assistants.AssistantThreadCreationOptions
             {
-                { "foo", "bar" }
-            },
-            Messages =
+                Metadata =
+                {
+                    { "foo", "bar" }
+                },
+                Messages =
+                {
+                   new Azure.AI.OpenAI.Assistants.ThreadInitializationMessage(Azure.AI.OpenAI.Assistants.MessageRole.User,  "What was funniest Friends episode?")
+                },
+            })).Value;
+
+            Config.Build(DotNetConfig.ConfigLevel.Global)
+                .SetString("StreamR", "Tests", "ThreadID", thread.Id);
+
+            threadId = thread.Id;
+
+            var run = (await client.CreateRunAsync(threadId, new Azure.AI.OpenAI.Assistants.CreateRunOptions(assistant.Id)
             {
-               new Azure.AI.OpenAI.Assistants.ThreadInitializationMessage(Azure.AI.OpenAI.Assistants.MessageRole.User, "Hi there, I'm kzu!")
-            },
-        })).Value;
+                AdditionalInstructions = "Respond in less than 50 words.",
+                Metadata = { },
+                OverrideInstructions = "",
+                OverrideModelName = "",
+                OverrideTools = { },
+            })).Value;
 
-        var msg = (await client.CreateMessageAsync(thread.Id, Azure.AI.OpenAI.Assistants.MessageRole.User, "What was funniest Friends episode?")).Value;
-
-        var run = (await client.CreateRunAsync(thread.Id, new Azure.AI.OpenAI.Assistants.CreateRunOptions(assistant.Id)
-        {
-            AdditionalInstructions = "Respond in less than 100 words.",
-            Metadata = { },
-            OverrideInstructions = "",
-            OverrideModelName = "",
-            OverrideTools = { },
-        })).Value;
-
-        while (run.Status != Azure.AI.OpenAI.Assistants.RunStatus.Completed)
-        {
-            run = (await client.GetRunAsync(thread.Id, run.Id)).Value;
-            await Task.Delay(1000);
+            while (run.Status != Azure.AI.OpenAI.Assistants.RunStatus.Completed)
+            {
+                run = (await client.GetRunAsync(threadId, run.Id)).Value;
+                await Task.Delay(1000);
+            }
         }
 
-        foreach (var message in (await client.GetMessagesAsync(thread.Id)).Value)
+        foreach (var message in (await client.GetMessagesAsync(threadId)).Value)
         {
             output.WriteLine($"{message.Role}: {string.Join(Environment.NewLine, message.ContentItems.OfType<MessageTextContent>().Select(x => x.Text))}");
         }

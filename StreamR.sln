@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis", "src\CodeAnalysis\CodeAnalysis.csproj", "{79EF1E4D-DB8C-4FFC-8AC3-BC72E312E445}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamR.TableStorage", "src\StreamR.TableStorage\StreamR.TableStorage.csproj", "{D49BB5BD-93F8-4355-A641-C0B76D8011D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{79EF1E4D-DB8C-4FFC-8AC3-BC72E312E445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79EF1E4D-DB8C-4FFC-8AC3-BC72E312E445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79EF1E4D-DB8C-4FFC-8AC3-BC72E312E445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49BB5BD-93F8-4355-A641-C0B76D8011D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49BB5BD-93F8-4355-A641-C0B76D8011D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49BB5BD-93F8-4355-A641-C0B76D8011D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49BB5BD-93F8-4355-A641-C0B76D8011D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

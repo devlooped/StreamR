@@ -6,12 +6,16 @@
     <RootNamespace>Devlooped.AI</RootNamespace>
     <UserSecretsId>720fb04e-8a57-480c-bfc8-a24ed9dfd68c</UserSecretsId>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.AI.OpenAI.Assistants" Version="1.0.0-beta.2" />
+    <PackageReference Include="DotNetConfig.Configuration" Version="1.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.7.0" />
@@ -20,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StreamR.TableStorage\StreamR.TableStorage.csproj" />
     <ProjectReference Include="..\StreamR\StreamR.csproj" />
     <ProjectReference Include="..\CodeAnalysis\CodeAnalysis.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
