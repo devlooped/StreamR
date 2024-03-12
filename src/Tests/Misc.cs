@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
@@ -19,6 +20,28 @@ public class Misc(ITestOutputHelper output)
         .AddDotNetConfig()
         .AddUserSecrets("720fb04e-8a57-480c-bfc8-a24ed9dfd68c")
         .Build();
+
+    [Fact]
+    public void PolymorphicJson()
+    {
+        var contents = new List<Content>
+        {
+            new MessageContent("Hello world"),
+            new FileContent("file.txt", "text/plain"),
+            new FileContent("image.png", "image/png"),
+        };
+
+        var json = JsonSerializer.Serialize(contents);
+
+        output.WriteLine(json);
+
+        var deserialized = JsonSerializer.Deserialize<List<Content>>(json);
+
+        Assert.NotNull(deserialized);
+        Assert.IsType<MessageContent>(deserialized[0]);
+        Assert.IsType<FileContent>(deserialized[1]);
+        Assert.IsType<FileContent>(deserialized[2]);
+    }
 
     [Fact]
     public async Task RunChatStreamAsync()
